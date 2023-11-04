@@ -1,55 +1,48 @@
-mod helper_avl_tree_small;
+mod helper_kv_store;
 
 #[cfg(test)]
-mod avltree_insert {
+mod kv_store_test {
     use scrypto::prelude::*;
     use scrypto_testenv::TestHelperExecution;
     use super::*;
-    use helper_avl_tree_small::*;
-
-    fn get_left_right_child(value:u16) -> (u16, u16) {
-        let half = value * (3/4) ;
-        let double = value / (4);
-        (half, double)
-    }
-    fn insert_in_tree_rec(value: u16, helper: &mut TestHelper, inserts: &mut u16, depth: u16){
-        if depth >20{
-            return;
-        }
-        let (left, right) = get_left_right_child(value);
-        *inserts = *inserts +1;
-        helper.insert(left, ());
-        *inserts = *inserts + 1;
-        helper.insert(right, ());
-        println!("depth: {}", inserts);
-        helper.execute_expect_success(false);
-        insert_in_tree_rec(left, helper, inserts, depth+1);
-        insert_in_tree_rec(right, helper, inserts, depth+1);
-    }
+    use helper_kv_store::*;
+    //
+    // fn get_left_right_child(value: Decimal) -> (Decimal, Decimal) {
+    //     let half = value * Decimal::from(3 / 4);
+    //     let double = value / Decimal::from(4);
+    //     (half, double)
+    // }
+    //
+    // fn insert_in_tree_rec(value: Decimal, helper: &mut TestHelper, inserts: &mut Decimal, depth: u32) {
+    //     if depth > 20 {
+    //         return;
+    //     }
+    //     let (left, right) = get_left_right_child(value);
+    //     *inserts = *inserts + Decimal::ONE;
+    //     helper.insert(left, inserts.clone());
+    //     *inserts = *inserts + Decimal::ONE;
+    //     helper.insert(right, inserts.clone());
+    //     println!("depth: {}", inserts);
+    //     helper.execute_expect_success(false);
+    //     insert_in_tree_rec(left, helper, inserts, depth + 1);
+    //     insert_in_tree_rec(right, helper, inserts, depth + 1);
+    // }
+    //
 
     #[test]
-    fn test_same_side_balance_left_queue() {
-        let mut inserts = 0;
-        let start_value = u16::MAX/2-1;
-        let mut queue:Vec<u16> = vec![start_value];
+    fn test_() {
         let mut helper = TestHelper::new();
         helper.instantiate_default(false);
-
-        helper.insert(start_value,());
-        for i in 1..20 {
-            let mut next_queue: Vec<u16> = vec![];
-            for value in queue.iter(){
-                let (left, right) = get_left_right_child(*value);
-                helper.insert(left, ());
-                helper.insert(right, ());
-                helper.execute_expect_success(true);
-                inserts = inserts + 2;
-                next_queue.push(left);
-                next_queue.push(right);
-                println!("inserts: {}, depth {}", inserts, i);
-            }
-            println!("inserts: {}, depth {}", inserts, i);
-            queue = next_queue;
+        for i in 1..i32::MAX {
+            let key = Decimal::from(i);
+            let value = PreciseDecimal::from(i);
+            helper.insert(key, value);
+            helper.execute_expect_success(true);
+            println!("inserts: {}", i);
         }
+        panic!()
     }
 }
+
+// TODO how many read write in one operation
+ // max size of KV store

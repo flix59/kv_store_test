@@ -1,8 +1,3 @@
-pub mod avl_tree;
-pub use avl_tree::AvlTree;
+mod kv_store_test;
 
 // helper modules and blueprints for testing
-mod avl_test_wrapper;
-mod avl_tree_health;
-mod avl_test_wrapper_decimal;
-mod avl_test_wrapper_u16;
