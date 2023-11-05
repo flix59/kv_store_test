@@ -17,7 +17,7 @@ mod kv_store_test_node {
             component
         }
 
-        pub fn insert(&mut self, key: Decimal, value: PreciseDecimal) {
+        pub fn insert(&mut self, max_key: i32, value: PreciseDecimal) {
             let tick = Tick {
                 delta_liquidity: value.clone(),
                 total_liquidity: value.clone(),
@@ -25,6 +25,7 @@ mod kv_store_test_node {
                 x_fee_outside: value.clone(),
                 y_fee_outside: value.clone(),
             };
+            let key = Decimal::from(max_key);
             let node = Node {
                 key,
                 value: tick,
@@ -35,10 +36,21 @@ mod kv_store_test_node {
                 prev: Some(key.clone()),
                 balance_factor: 0,
             };
-            self.store.insert(key, node);
+            debug!("insert: {}", max_key);
+            for i in 0..max_key {
+                let key_ = Decimal::from(i);
+                self.store.insert(key_, node.clone());
+            }
+        }
+        pub fn reset(&mut self, last_key: i32) {
+            for i in 0..last_key{
+                let key = Decimal::from(i);
+                self.store.remove(&key);
+            }
         }
     }
 }
+
 #[derive(ScryptoSbor, Clone)]
 pub struct Tick {
     pub delta_liquidity: PreciseDecimal,
@@ -47,6 +59,7 @@ pub struct Tick {
     pub x_fee_outside: PreciseDecimal,
     pub y_fee_outside: PreciseDecimal,
 }
+
 #[derive(ScryptoSbor, Clone)]
 pub(crate) struct Node {
     /// Unique key for this node

@@ -8,14 +8,35 @@ mod kv_store_test {
     use helper_kv_store::*;
 
     #[test]
-    fn test_() {
+    fn test_insert_and_update() {
         let mut helper = TestHelper::new();
         helper.instantiate_default(false);
+        let mut key = 430;
+        let mut offset = 1;
         for i in 1..i32::MAX {
-            let key = Decimal::from(i);
-            helper.insert(key.clone(), key.clone());
+            helper.insert(key, Decimal::from(key));
             helper.execute_expect_success(true);
-            println!("inserts: {}", i);
+            helper.insert(key, Decimal::from(0));
+            helper.execute_expect_success(true);
+            helper.reset(key);
+            offset = offset* 2;
+            key = key + offset;
+            println!("inserts: {}", key);
+        }
+    }
+    // #[test]
+    fn test_insert() {
+        let mut helper = TestHelper::new();
+        helper.instantiate_default(false);
+        let mut key = 430;
+        let mut offset = 1;
+        for i in 1..i32::MAX {
+            helper.insert(key, Decimal::from(key));
+            helper.execute_expect_success(true);
+            helper.reset(key);
+            offset = offset* 2;
+            key = key + offset;
+            println!("inserts: {}", key);
         }
     }
 }

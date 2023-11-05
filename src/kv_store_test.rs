@@ -4,12 +4,12 @@ use scrypto::prelude::*;
 #[blueprint]
 mod kv_store_test {
     struct KVStoreTest {
-        store: KeyValueStore<Decimal, Decimal>,
+        store: KeyValueStore<i32, Decimal>,
     }
 
     impl KVStoreTest {
         pub fn instantiate() -> Global<KVStoreTest> {
-            let store: KeyValueStore<Decimal, Decimal> = KeyValueStore::new();
+            let store: KeyValueStore<i32, Decimal> = KeyValueStore::new();
             let component = (Self { store })
                 .instantiate()
                 .prepare_to_globalize(OwnerRole::None)
@@ -17,13 +17,15 @@ mod kv_store_test {
             component
         }
 
-        pub fn insert(&mut self, key: Decimal, value: Decimal) {
-            self.store.insert(key, value);
+        pub fn insert_up_to(&mut self, max_key: i32, value: Decimal) {
+            debug!("insert: {}", max_key);
+            for i in 0..max_key {
+                self.store.insert(i, value);
+            }
         }
-        pub fn reset(&mut self, last_key: i32) {
-            for i in 0..last_key {
-                let key = Decimal::from(i);
-                self.store.remove(&key);
+        pub fn reset(&mut self, max_key: i32) {
+            for i in 0..max_key {
+                self.store.remove(&i);
             }
         }
     }

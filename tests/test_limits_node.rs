@@ -11,13 +11,18 @@ mod kv_store_test {
     fn test_() {
         let mut helper = TestHelper::new();
         helper.instantiate_default(false);
-        for i in 1..i32::MAX {
-            let key = Decimal::from(i);
-            let value = PreciseDecimal::from(i);
+        let mut key = 420;
+        let mut offset = 1;
+        for i in 0..1000 {
+            let value = PreciseDecimal::from(key);
             helper.insert(key, value);
             helper.execute_expect_success(true);
-            println!("inserts: {}", i);
+            println!("inserts: {}", key);
+            helper.reset(key);
+            offset = offset* 2;
+            key = key + offset;
         }
+        panic!("")
     }
 }
 

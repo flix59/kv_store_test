@@ -34,7 +34,7 @@ impl TestHelper {
         let manifest_builder = mem::replace(&mut self.env.manifest_builder, ManifestBuilder::new());
         self.env.manifest_builder = manifest_builder.call_function(
             self.env.package_address("test"),
-            "KVStoreTest",
+            "KVStoreTestU16",
             "instantiate",
             manifest_args!()
         );
@@ -50,24 +50,14 @@ impl TestHelper {
         receipt
     }
 
-    pub fn insert(&mut self, key: i32, value: Decimal) -> &mut TestHelper {
+    pub fn insert(&mut self, key: u16) -> &mut TestHelper {
         let manifest_builder = mem::replace(&mut self.env.manifest_builder, ManifestBuilder::new());
         self.env.manifest_builder = manifest_builder.call_method(
             self.tree_address.unwrap(),
-            "insert_up_to",
-            manifest_args!(key, value)
+            "insert",
+            manifest_args!(key)
         );
         self.env.new_instruction("insert", 1, 0);
-        self
-    }
-    pub fn reset(&mut self, last_key:i32) -> &mut TestHelper{
-        let manifest_builder = mem::replace(&mut self.env.manifest_builder, ManifestBuilder::new());
-        self.env.manifest_builder = manifest_builder.call_method(
-            self.tree_address.unwrap(),
-            "reset",
-            manifest_args!(last_key)
-        );
-        self.env.new_instruction("reset", 1, 0);
         self
     }
 }

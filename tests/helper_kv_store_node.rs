@@ -50,7 +50,7 @@ impl TestHelper {
         receipt
     }
 
-    pub fn insert(&mut self, key: Decimal, value: PreciseDecimal) -> &mut TestHelper {
+    pub fn insert(&mut self, key: i32, value: PreciseDecimal) -> &mut TestHelper {
         let manifest_builder = mem::replace(&mut self.env.manifest_builder, ManifestBuilder::new());
         self.env.manifest_builder = manifest_builder.call_method(
             self.tree_address.unwrap(),
@@ -58,6 +58,16 @@ impl TestHelper {
             manifest_args!(key, value)
         );
         self.env.new_instruction("insert", 1, 0);
+        self
+    }
+    pub fn reset(&mut self, last_key:i32) -> &mut TestHelper{
+        let manifest_builder = mem::replace(&mut self.env.manifest_builder, ManifestBuilder::new());
+        self.env.manifest_builder = manifest_builder.call_method(
+            self.tree_address.unwrap(),
+            "reset",
+            manifest_args!(last_key)
+        );
+        self.env.new_instruction("reset", 1, 0);
         self
     }
 }
