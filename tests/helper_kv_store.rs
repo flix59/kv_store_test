@@ -60,4 +60,14 @@ impl TestHelper {
         self.env.new_instruction("insert", 1, 0);
         self
     }
+    pub fn reset(&mut self, last_key:i32) -> &mut TestHelper{
+        let manifest_builder = mem::replace(&mut self.env.manifest_builder, ManifestBuilder::new());
+        self.env.manifest_builder = manifest_builder.call_method(
+            self.tree_address.unwrap(),
+            "reset",
+            manifest_args!(last_key)
+        );
+        self.env.new_instruction("reset", 1, 0);
+        self
+    }
 }
